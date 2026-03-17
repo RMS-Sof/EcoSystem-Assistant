@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSystem 2026 Guide • Your Personal Assistant</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+
+        :root {
+            --primary: #8c9fff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+            background: radial-gradient(circle at top, #1a1f3c 0%, #0b0e1a 55%, #06080f 100%);
+            color: #e8ecff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .assistant-container {
+            width: 100%;
+            max-width: 920px;
+            background: linear-gradient(160deg, #1b2142, #111632);
+            border-radius: 28px;
+            border: 1px solid rgba(140, 160, 255, 0.25);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7),
+                        0 0 40px rgba(140, 180, 255, 0.3);
+            overflow: hidden;
+            height: 92vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #1a2044, #0f1433);
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid rgba(150, 170, 255, 0.2);
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 0 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .header-content h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.65rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .header-content p {
+            font-size: 0.95rem;
+            opacity: 0.75;
+            color: #c4ccff;
+        }
+
+        .chat-area {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: rgba(11, 14, 26, 0.6);
+        }
+
+        .message {
+            max-width: 82%;
+            padding: 16px 20px;
+            border-radius: 18px;
+            line-height: 1.5;
+            font-size: 1.02rem;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: #1a2044;
+            border: 1px solid rgba(140, 160, 255, 0.2);
+            border-bottom-left-radius: 4px;
+        }
+
+        .bot-message a {
+            color: #a3b4ff;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        .bot-message a:hover {
+            color: #ffffff;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 0 24px 20px;
+            background: #111632;
+        }
+
+        .quick-btn {
+            background: rgba(140, 160, 255, 0.12);
+            border: 1px solid rgba(140, 160, 255, 0.3);
+            color: #c4ccff;
+            padding: 10px 18px;
+            border-radius: 9999px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .quick-btn:hover {
+            background: rgba(140, 160, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .input-area {
+            padding: 20px 28px;
+            background: #0e1224;
+            border-top: 1px solid rgba(150, 170, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #userInput {
+            flex: 1;
+            background: #14182f;
+            border: 1px solid rgba(140, 160, 255, 0.3);
+            padding: 16px 22px;
+            border-radius: 9999px;
+            color: white;
+            font-size: 1.05rem;
+            outline: none;
+            box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.5);
+        }
+
+        #userInput:focus {
+            border-color: #8c9fff;
+            box-shadow: 0 0 0 4px rgba(140, 160, 255, 0.25);
+        }
+
+        .mic-btn, .send-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(140, 160, 255, 0.15);
+            border: 1px solid rgba(140, 160, 255, 0.4);
+            color: #8c9fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mic-btn:hover, .send-btn:hover {
+            background: rgba(140, 160, 255, 0.3);
+            transform: scale(1.08);
+        }
+
+        .mic-btn.listening {
+            background: #ff4b4b;
+            color: white;
+            animation: pulse 1.4s infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 12px;
+            font-size: 0.85rem;
+            color: #8c9fff;
+            background: #0b0e1a;
+            border-top: 1px solid rgba(140, 160, 255, 0.15);
+        }
+
+        .typing {
+            font-style: italic;
+            opacity: 0.7;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="assistant-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🤖</div>
+            <div class="header-content">
+                <h1>EcoSystem Guide</h1>
+                <p>Local • Voice • Intent-Aware Assistant for EcoSystem 2026</p>
+            </div>
+            <div style="margin-left: auto; font-size: 2.2rem; opacity: 0.3;">🌱</div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="quick-btn" data-intent="appointment">📅 Schedule Appointment</button>
+            <button class="quick-btn" data-intent="submission">📤 Upload Assignment</button>
+            <button class="quick-btn" data-intent="exam">🧠 Take Mock Exam</button>
+            <button class="quick-btn" data-intent="roadmap">🛤️ Build Roadmap</button>
+            <button class="quick-btn" data-intent="stress">🧘 Stress Relief</button>
+            <button class="quick-btn" data-intent="quiz">📝 Start Quiz</button>
+        </div>
+
+        <!-- Chat Area -->
+        <div id="chatArea" class="chat-area">
+            <!-- Welcome message injected by JS -->
+        </div>
+
+        <!-- Input -->
+        <div class="input-area">
+            <button id="micBtn" class="mic-btn" title="Voice Input">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+            </button>
+            <input id="userInput" type="text" placeholder="Ask anything... (e.g. How do I upload assignment?)" autocomplete="off">
+            <button id="sendBtn" class="send-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+
+        <div class="footer">
+            Designed by Prof. Rahul M. Samant  • HOD-IT • NBNSTIC
+        </div>
+    </div>
+
+    <script>
+        // ==================== INTENT DATABASE (Local - No API) ====================
+        const intents = {
+            greeting: {
+                keywords: ["hi", "hello", "hey", "namaste", "good morning", "good evening"],
+                response: "Namaste! 🙏 I'm <strong>EcoSystem Guide</strong>, your personal local assistant for EcoSystem 2026. How can I help you today?",
+                link: null
+            },
+            appointment: {
+                keywords: ["appointment", "schedule", "meet", "consult", "meeting", "book", "slot"],
+                response: "✅ Appointment booking is ready! Click below to schedule with Prof. Rahul M. Samant (HOD-IT):",
+                link: "https://script.google.com/macros/s/AKfycbyU5_GsvOnqekKqvzl0dhVMR-zmHADQlAl8X03Nlk3DC2GL-97EdG_TMq4xCIzpbOoc5A/exec"
+            },
+            submission: {
+                keywords: ["submit", "upload", "assignment", "theory", "pdf", "be sem", "seit"],
+                response: "📤 Go to <strong>Online Submissions</strong> card in the portal.<br><br>Direct upload link for theory assignments (TEIT & BE):",
+                link: "https://script.google.com/macros/s/AKfycbwOYSuuqrh8t0JVHfmspY5WJt3iYu8E3L2MABiCzXAI712TZF_FKqsyG0MfbKmmgWH9/exec"
+            },
+            exam: {
+                keywords: ["mock exam", "paperless", "viva", "oral", "theory exam", "subjective"],
+                response: "🧠 Practice mode activated!<br>Take a Paperless Exam or Mock Viva right now:",
+                link: "https://rms-sof.github.io/Paperless-Exam/",
+                extra: "Also try: <a href='https://script.google.com/macros/s/AKfycbzV5ZR_0ilC4vacB6NUpzMhUkUkSYNKBSRsZwpurblUCacNO1EBVS-RHZpSy4G7NqOTKA/exec' target='_blank'>BE IT Mock Theory Exam</a>"
+            },
+            roadmap: {
+                keywords: ["roadmap", "plan", "biodata", "action plan", "career", "skills"],
+                response: "🛤️ Your success roadmap is ready!<br>Start with the official EcoSystem Roadmap:",
+                link: "https://rms-sof.github.io/RoadMap/"
+            },
+            stress: {
+                keywords: ["stress", "mental", "wellness", "counselling", "relax", "motivation"],
+                response: "🧘‍♂️ Take a deep breath. Here are instant wellness resources:",
+                link: "https://www.youtube.com/watch?v=NRft1DVXBcI",
+                extra: "Also check the <strong>Stress Management</strong> card in the main portal"
+            },
+            quiz: {
+                keywords: ["quiz", "test", "mcq", "practice", "knowledge"],
+                response: "📝 Pick any quiz instantly:",
+                link: "https://rms-sof.github.io/cs-quiz/",
+                extra: "Popular ones: <a href='https://rms-sof.github.io/ML-Quiz/' target='_blank'>ML Quiz</a> • <a href='https://rms-sof.github.io/ISRQuiz/' target='_blank'>ISR Quiz</a>"
+            },
+            feedback: {
+                keywords: ["feedback", "rate", "improve", "suggestion"],
+                response: "❤️ Thank you for wanting to make EcoSystem better!<br>Give your valuable feedback here:",
+                link: "https://forms.gle/v12gqr4TcRCrnXHx6"
+            },
+            unknown: {
+                keywords: [],
+                response: "I'm still learning! Try one of the quick buttons above or ask me about:<br>• Submissions • Appointment • Mock Exam • Roadmap • Stress Relief",
+                link: null
+            }
+        };
+
+        // ==================== SPEECH RECOGNITION & SYNTHESIS (100% Local) ====================
+        let recognition;
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let isListening = false;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-IN'; // Best for Indian students
+            recognition.interimResults = false;
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text.replace(/<[^>]+>/g, '')); // strip HTML
+                utterance.rate = 1.05;
+                utterance.pitch = 1.1;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // ==================== CHAT FUNCTIONS ====================
+        const chatArea = document.getElementById('chatArea');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const micBtn = document.getElementById('micBtn');
+
+        function addMessage(text, type) {
+            const msg = document.createElement('div');
+            msg.className = `message ${type}-message`;
+            msg.innerHTML = text;
+            chatArea.appendChild(msg);
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            if (type === 'bot') {
+                speak(text);
+            }
+        }
+
+        function processQuery(query) {
+            if (!query.trim()) return;
+
+            // Add user message
+            addMessage(query, 'user');
+
+            // Find matching intent
+            let matchedIntent = 'unknown';
+            const lowerQuery = query.toLowerCase();
+
+            for (const key in intents) {
+                if (key === 'unknown') continue;
+                const intent = intents[key];
+                for (let kw of intent.keywords) {
+                    if (lowerQuery.includes(kw)) {
+                        matchedIntent = key;
+                        break;
+                    }
+                }
+                if (matchedIntent !== 'unknown') break;
+            }
+
+            const intentData = intents[matchedIntent];
+
+            // Simulate tiny thinking delay
+            setTimeout(() => {
+                let botHTML = intentData.response;
+                if (intentData.link) {
+                    botHTML += `<br><br><a href="${intentData.link}" target="_blank" style="display:inline-block;background:#667eea;color:white;padding:10px 20px;border-radius:12px;text-decoration:none;font-weight:600;">🚀 Open Link Now</a>`;
+                }
+                if (intentData.extra) {
+                    botHTML += `<br><br>${intentData.extra}`;
+                }
+                addMessage(botHTML, 'bot');
+            }, 420);
+        }
+
+        // Send text
+        function sendMessage() {
+            const query = userInput.value.trim();
+            if (query) {
+                processQuery(query);
+                userInput.value = '';
+            }
+        }
+
+        // Voice
+        function toggleVoice() {
+            if (!recognition) {
+                alert("Voice not supported in this browser. Please use Chrome/Edge.");
+                return;
+            }
+
+            if (isListening) {
+                recognition.stop();
+                return;
+            }
+
+            recognition.start();
+            micBtn.classList.add('listening');
+            userInput.placeholder = "🎤 Listening... Speak now";
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        micBtn.addEventListener('click', toggleVoice);
+
+        if (recognition) {
+            recognition.onstart = () => {
+                isListening = true;
+            };
+
+            recognition.onend = () => {
+                isListening = false;
+                micBtn.classList.remove('listening');
+                userInput.placeholder = "Ask anything... (e.g. How do I upload assignment?)";
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript.trim();
+                userInput.value = transcript;
+                processQuery(transcript);
+            };
+
+            recognition.onerror = () => {
+                micBtn.classList.remove('listening');
+                userInput.placeholder = "Try again or type...";
+            };
+        }
+
+        // Quick action buttons
+        document.querySelectorAll('.quick-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const intentKey = btn.getAttribute('data-intent');
+                // Simulate query
+                const fakeQuery = intentKey === 'appointment' ? 'schedule appointment' :
+                                  intentKey === 'submission' ? 'upload assignment' :
+                                  intentKey === 'exam' ? 'mock exam' :
+                                  intentKey === 'roadmap' ? 'roadmap' :
+                                  intentKey === 'stress' ? 'stress relief' : 'quiz';
+                processQuery(fakeQuery);
+            });
+        });
+
+        // Welcome message
+        window.onload = () => {
+            const welcomeHTML = `
+                <div class="message bot-message">
+                    Namaste! 🙏<br>
+                    I am <strong>EcoSystem Guide</strong> — your personal assistant for the EcoSystem 2026 portal. Demo Version.<br><br>
+                    
+                </div>
+            `;
+            chatArea.innerHTML = welcomeHTML;
+            speak("Namaste! I am EcoSystem Guide, your personal assistant for EcoSystem 2026.");
+        };
+    </script>
+</body>
+</html>
